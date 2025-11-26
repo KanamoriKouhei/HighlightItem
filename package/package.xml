@@ -6,7 +6,7 @@
     <loadPriority>100</loadPriority>
     <version>0.23.237</version>
     <tags>General,QoL,Item</tags>
-    <description>this is sample mod</description>
+    <description>ほしいエンチャントが付与されたアイテムのドロップと取得をわかりやすくします。</description>
     <builtin>false</builtin>
     <visibility>Private</visibility>
 </Meta>

@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using UnityEngine;
 
 namespace HighlightItem
 {
@@ -25,10 +24,15 @@ namespace HighlightItem
 
                 foreach (var element in thing.elements.dict.Values)
                 {
-                    if (!string.IsNullOrEmpty(element.Name) && element.Name.Contains(userFilter.EnchantName!) && element.Value >= (userFilter.Value ?? 0))
+                    if (Plugin.CheckIsMatch(element, userFilter))
                     {
-                        SE.Play("offering");
-                        return;
+                        // サウンド再生
+                        SE.Play("jingle_lvup");
+
+                        // エフェクト再生
+                        var effect = Effect.Get("aura_heaven");
+                        if (effect != null)
+                            effect.Play(thing.pos);
                     }
                 }
             }

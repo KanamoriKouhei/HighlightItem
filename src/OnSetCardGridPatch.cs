@@ -22,16 +22,11 @@ internal class OnSetCardGridPatch
             if (string.IsNullOrEmpty(userFilter.EnchantName))
                 continue;
 
-            // Check elements (enchantments/stats)
             foreach (var element in card.elements.dict.Values)
             {
-                // element.Name returns the localized display name (e.g., "Fire Damage" or "火炎ダメージ")
-                if (!string.IsNullOrEmpty(element.Name) && element.Name.Contains(userFilter.EnchantName!) &&
-                    element.Value >= (userFilter.Value ?? 0))
-                {
+                if (Plugin.CheckIsMatch(element, userFilter))
+                    // アイテム外枠をハイライト
                     __0.Attach("guide", false);
-                    return; // Found a match, highlight and exit
-                }
             }
         }
     }

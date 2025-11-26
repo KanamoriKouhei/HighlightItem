@@ -50,6 +50,7 @@ namespace HighlightItem
             Instance?.Logger.LogError(message);
         }
 
+        // CSVファイルを読み込む
         private static void LoadCsv()
         {
             try
@@ -66,9 +67,18 @@ namespace HighlightItem
             }
             catch (Exception ex)
             {
-                EClass.ui.Say($"[{ModInfo.Name}] Failed load CSV File");
+                EClass.ui.Say($"[{ModInfo.Name}] Failed to load CSV File");
                 Debug.Log(ex.Message);
             }
+        }
+
+        // エンチャントがCSV条件に合うかを返す
+        public static bool CheckIsMatch(Element element, Filter filter)
+        {
+            if (string.IsNullOrEmpty(element.Name))
+                return false;
+
+            return element.Name.Contains(filter.EnchantName!) && element.Value >= (filter.Value ?? 0);
         }
     }
 }
