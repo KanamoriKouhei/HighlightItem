@@ -11,9 +11,11 @@ namespace HighlightItem
             if (t is not Thing thing || thing.placeState is not PlaceState.roaming)
                 return;
 
+            // フィルター件数が0なら終了
             if (Plugin.UserFilterList.Count == 0)
                 return;
 
+            // エンチャントがnullなら終了
             if (thing.elements == null)
                 return;
 

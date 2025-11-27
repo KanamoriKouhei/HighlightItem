@@ -26,8 +26,8 @@ namespace HighlightItem
 
         private const string CsvFileName = "UserFilter.csv";
 
-        public static List<Filter> UserFilterList = [];
-
+        internal static List<Filter> UserFilterList = [];
+        
         private void Awake()
         {
             Instance = this;
@@ -49,36 +49,44 @@ namespace HighlightItem
         {
             Instance?.Logger.LogError(message);
         }
-
-        // CSVファイルを読み込む
-        private static void LoadCsv()
+        
+        // CSVファイルを読み込む    
+        internal static void LoadCsv()
         {
             try
             {
+                // ファイルパス作成
                 var csvFilePath =
                     Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, CsvFileName);
+                
                 using (var reader = new StreamReader(csvFilePath))
                 {
                     using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
                     UserFilterList = csvReader.GetRecords<Filter>().ToList();
                 }
-
-                Debug.Log($"[{ModInfo.Name}] Success load CSV File");
+                
+                // 成功メッセージ
+                EClass.ui.Say($"[{ModInfo.Name}] Success load CSV File");
             }
             catch (Exception ex)
             {
-                EClass.ui.Say($"[{ModInfo.Name}] Failed to load CSV File");
+                // 失敗メッセージ
+                EClass.ui.Say($"[{ModInfo.Name}] Failed load CSV File");
                 Debug.Log(ex.Message);
             }
         }
-
+        
         // エンチャントがCSV条件に合うかを返す
-        public static bool CheckIsMatch(Element element, Filter filter)
+        internal static bool CheckIsMatch(Element element, Filter filter)
         {
+            // エレメント名がnullならfalse
             if (string.IsNullOrEmpty(element.Name))
                 return false;
 
-            return element.Name.Contains(filter.EnchantName!) && element.Value >= (filter.Value ?? 0);
+            if (element.IsFoodTrait)
+                return false;
+
+            return element.Name.Equals(filter.EnchantName) && element.Value >= (filter.Value ?? 0);
         }
     }
 }

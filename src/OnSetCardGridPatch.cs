@@ -1,32 +1,36 @@
 using HarmonyLib;
-using HighlightItem;
 
-[HarmonyPatch(typeof(Trait), nameof(Trait.OnSetCardGrid))]
-internal class OnSetCardGridPatch
+namespace HighlightItem
 {
-    private static void Postfix(Trait __instance, ButtonGrid __0)
+    [HarmonyPatch(typeof(Trait), nameof(Trait.OnSetCardGrid))]
+    internal class OnSetCardGridPatch
     {
-        // Check if the inventory belongs to the player (PC)
-        if (__0.invOwner?.owner?.IsPC != true)
-            return;
-
-        if (Plugin.UserFilterList.Count == 0)
-            return;
-
-        var card = __0.Card;
-        if (card == null || card.elements == null)
-            return;
-
-        foreach (var userFilter in Plugin.UserFilterList)
+        private static void Postfix(Trait __instance, ButtonGrid __0)
         {
-            if (string.IsNullOrEmpty(userFilter.EnchantName))
-                continue;
+            // 商人のハイライトを有効化するためにコメントアウト
+            // プレイヤーキャラクターのアイテムであるか確認
+            // if (__0.invOwner?.owner?.IsPC != true)
+            //     return;
 
-            foreach (var element in card.elements.dict.Values)
+            // CSVの検索条件数を確認
+            if (Plugin.UserFilterList.Count == 0)
+                return;
+
+            var card = __0.Card;
+            if (card == null || card.elements == null)
+                return;
+
+            foreach (var userFilter in Plugin.UserFilterList)
             {
-                if (Plugin.CheckIsMatch(element, userFilter))
-                    // アイテム外枠をハイライト
-                    __0.Attach("guide", false);
+                if (string.IsNullOrEmpty(userFilter.EnchantName))
+                    continue;
+
+                foreach (var element in card.elements.dict.Values)
+                {
+                    if (Plugin.CheckIsMatch(element, userFilter))
+                        // アイテム外枠をハイライト
+                        __0.Attach("guide", false);
+                }
             }
         }
     }
